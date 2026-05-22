@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   Smartphone, 
   Laptop, 
@@ -8,10 +9,16 @@ import {
   ShieldAlert,
   Radio, 
   Layers,
-  Send
+  Send,
+  LogOut,
+  BarChart3,
+  ShieldCheck,
+  AlertCircle
 } from 'lucide-react';
 
 export default function FloorCheckHub() {
+  const navigate = useNavigate();
+
   // Mocked state simulating current Active Floor data managed by Phone Keepers
   const [activeFloorName, setActiveFloorName] = useState("Floor 2 - Operations");
   const [assignedKeeper, setAssignedKeeper] = useState("Gayan Perera");
@@ -47,10 +54,28 @@ export default function FloorCheckHub() {
     }));
   };
 
+  // Log Out Execution Routine
+  const handleLogout = () => {
+    localStorage.removeItem("app_session");
+    alert("Session terminated securely.");
+    navigate('/login');
+  };
+
+  // --- ADMIN INSIGHTS: Global Floor Metrics Computations ---
+  const totalPlatforms = platforms.length;
+  const completedPlatforms = platforms.filter(p => p.status === 'completed').length;
+  const flaggedDiscrepancies = platforms.filter(p => p.discrepancy).length;
+
+  const totalLaptops = platforms.reduce((acc, p) => acc + p.assets.laptops.total, 0);
+  const checkedLaptops = platforms.reduce((acc, p) => acc + p.assets.laptops.checked, 0);
+  const totalPhones = platforms.reduce((acc, p) => acc + p.assets.phones.total, 0);
+  const checkedPhones = platforms.reduce((acc, p) => acc + p.assets.phones.checked, 0);
+
   return (
-    <div className="space-y-6">
-      {/* Top Floor Profile Header */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-brand-darkGray pb-5 gap-4">
+    <div className="space-y-6 max-w-7xl mx-auto p-4 md:p-6 min-h-screen bg-zinc-950 text-zinc-100">
+      
+      {/* Top Floor Profile & Action Header */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-zinc-900 pb-5 gap-4">
         <div>
           <div className="flex items-center gap-2 text-xs font-bold text-brand-neonCyan uppercase tracking-wider">
             <Radio size={14} className="animate-pulse text-brand-neonCyan" />
@@ -58,13 +83,81 @@ export default function FloorCheckHub() {
           </div>
           <h1 className="text-3xl font-extrabold text-white mt-1 tracking-tight">{activeFloorName}</h1>
         </div>
-        <div className="bg-brand-darkGray border border-zinc-800 px-4 py-2.5 rounded-xl flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-brand-neonCyan/10 border border-brand-neonCyan/20 flex items-center justify-center text-brand-neonCyan">
-            <Layers size={14} />
+
+        <div className="flex items-center gap-3 w-full md:w-auto justify-between md:justify-end">
+          <div className="bg-brand-darkGray border border-zinc-800 px-4 py-2 rounded-xl flex items-center gap-3">
+            <div className="w-8 h-8 rounded-full bg-brand-neonCyan/10 border border-brand-neonCyan/20 flex items-center justify-center text-brand-neonCyan">
+              <Layers size={14} />
+            </div>
+            <div>
+              <p className="text-[9px] text-zinc-500 font-bold uppercase tracking-wider">Duty Keeper</p>
+              <p className="text-xs font-semibold text-zinc-200">{assignedKeeper}</p>
+            </div>
           </div>
+
+          {/* Secure Session Terminate Trigger Button */}
+          <button 
+            onClick={handleLogout}
+            className="p-3 bg-zinc-900 hover:bg-brand-neonRed/10 border border-zinc-800 hover:border-brand-neonRed/30 rounded-xl text-zinc-400 hover:text-brand-neonRed transition-all duration-150 flex items-center gap-2 text-xs font-bold uppercase tracking-wider"
+            title="Log Out Session"
+          >
+            <LogOut size={15} />
+            <span className="hidden sm:inline">Exit Hub</span>
+          </button>
+        </div>
+      </div>
+
+      {/* =========================================================
+          🆕 ADMIN STATUS LIVE DASHBOARD PANEL
+          ========================================================= */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Metric 1: Track Progress Status */}
+        <div className="bg-brand-darkGray border border-zinc-900 rounded-xl p-4 flex items-center justify-between">
           <div>
-            <p className="text-[9px] text-zinc-500 font-bold uppercase tracking-wider">Assigned Duty Keeper</p>
-            <p className="text-xs font-semibold text-zinc-200">{assignedKeeper}</p>
+            <p className="text-[10px] uppercase font-bold text-zinc-500 tracking-wider">Platform Clearance</p>
+            <h4 className="text-xl font-black font-mono text-white mt-1">{completedPlatforms} / {totalPlatforms}</h4>
+          </div>
+          <div className="w-9 h-9 rounded-lg bg-brand-neonGreen/10 border border-brand-neonGreen/20 flex items-center justify-center text-brand-neonGreen">
+            <ShieldCheck size={18} />
+          </div>
+        </div>
+
+        {/* Metric 2: Open Floor Discrepancy Flags */}
+        <div className="bg-brand-darkGray border border-zinc-900 rounded-xl p-4 flex items-center justify-between">
+          <div>
+            <p className="text-[10px] uppercase font-bold text-zinc-500 tracking-wider">Active Exceptions</p>
+            <h4 className={`text-xl font-black font-mono mt-1 ${flaggedDiscrepancies > 0 ? 'text-brand-neonRed' : 'text-zinc-400'}`}>
+              {flaggedDiscrepancies} Issue{flaggedDiscrepancies !== 1 ? 's' : ''}
+            </h4>
+          </div>
+          <div className={`w-9 h-9 rounded-lg flex items-center justify-center border ${flaggedDiscrepancies > 0 ? 'bg-brand-neonRed/10 border-brand-neonRed/20 text-brand-neonRed' : 'bg-zinc-900 border-zinc-800 text-zinc-600'}`}>
+            <AlertCircle size={18} />
+          </div>
+        </div>
+
+        {/* Metric 3: Global Laptop Auditing Counts */}
+        <div className="bg-brand-darkGray border border-zinc-900 rounded-xl p-4 flex items-center justify-between">
+          <div>
+            <p className="text-[10px] uppercase font-bold text-zinc-500 tracking-wider">Laptop Telemetry</p>
+            <h4 className="text-xl font-black font-mono text-white mt-1">
+              {checkedLaptops} <span className="text-xs font-normal text-zinc-500">/ {totalLaptops}</span>
+            </h4>
+          </div>
+          <div className="w-9 h-9 rounded-lg bg-zinc-950 border border-zinc-900 flex items-center justify-center text-zinc-400">
+            <Laptop size={16} />
+          </div>
+        </div>
+
+        {/* Metric 4: Global Phone Auditing Counts */}
+        <div className="bg-brand-darkGray border border-zinc-900 rounded-xl p-4 flex items-center justify-between">
+          <div>
+            <p className="text-[10px] uppercase font-bold text-zinc-500 tracking-wider">Smartphone Telemetry</p>
+            <h4 className="text-xl font-black font-mono text-white mt-1">
+              {checkedPhones} <span className="text-xs font-normal text-zinc-500">/ {totalPhones}</span>
+            </h4>
+          </div>
+          <div className="w-9 h-9 rounded-lg bg-zinc-950 border border-zinc-900 flex items-center justify-center text-zinc-400">
+            <Smartphone size={16} />
           </div>
         </div>
       </div>
@@ -74,7 +167,9 @@ export default function FloorCheckHub() {
         
         {/* Main Floor Platforms Quick Audit Feed */}
         <div className="xl:col-span-2 space-y-4">
-          <h2 className="text-xs font-bold uppercase tracking-wider text-zinc-400">Operational Hubs Control Lineup</h2>
+          <h2 className="text-xs font-bold uppercase tracking-wider text-zinc-500 flex items-center gap-1.5">
+            <BarChart3 size={12} /> Operational Hubs Control Lineup
+          </h2>
           
           {platforms.map((platform) => {
             const isCompleted = platform.status === 'completed';
@@ -90,7 +185,17 @@ export default function FloorCheckHub() {
               >
                 <div className="flex flex-wrap justify-between items-start gap-2">
                   <div>
-                    <h3 className="text-base font-bold text-white tracking-wide">{platform.name}</h3>
+                    <div className="flex items-center gap-2">
+                      <h3 className="text-base font-bold text-white tracking-wide">{platform.name}</h3>
+                      <span className={`text-[9px] px-1.5 py-0.5 rounded font-mono font-bold uppercase border
+                        ${isCompleted ? 'bg-brand-neonGreen/10 border-brand-neonGreen/20 text-brand-neonGreen' : ''}
+                        ${isFailed ? 'bg-brand-neonRed/10 border-brand-neonRed/20 text-brand-neonRed' : ''}
+                        ${platform.status === 'in-progress' ? 'bg-brand-neonCyan/10 border-brand-neonCyan/20 text-brand-neonCyan' : ''}
+                        ${platform.status === 'pending' ? 'bg-zinc-900 border-zinc-800 text-zinc-500' : ''}
+                      `}>
+                        {platform.status}
+                      </span>
+                    </div>
                     <p className="text-xs text-zinc-500 mt-0.5">Platform Lead: <span className="text-zinc-400 font-medium">{platform.incharge}</span></p>
                   </div>
                   
@@ -157,9 +262,9 @@ export default function FloorCheckHub() {
 
         {/* Dynamic Comms Channel Panel Sidebar */}
         <div className="space-y-4">
-          <h2 className="text-xs font-bold uppercase tracking-wider text-zinc-400">Radio Dispatch Wire</h2>
+          <h2 className="text-xs font-bold uppercase tracking-wider text-zinc-500">Radio Dispatch Wire</h2>
           {activeChat ? (
-            <div className="bg-brand-darkGray border border-brand-neonCyan/20 rounded-xl p-4 flex flex-col h-64 justify-between">
+            <div className="bg-brand-darkGray border border-brand-neonCyan/20 rounded-xl p-4 flex flex-col h-64 justify-between shadow-lg">
               <div>
                 <div className="flex justify-between items-start border-b border-zinc-800 pb-2">
                   <div>

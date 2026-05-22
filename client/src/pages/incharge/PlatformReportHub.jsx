@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   Laptop, 
   Smartphone, 
@@ -6,10 +7,16 @@ import {
   AlertOctagon, 
   Wrench,
   CheckCircle2,
-  FileSpreadsheet
+  FileSpreadsheet,
+  LogOut,
+  Radio,
+  Clock,
+  UserCheck
 } from 'lucide-react';
 
 export default function PlatformReportHub() {
+  const navigate = useNavigate();
+
   // Assigned platform scope profile variables
   const [platformMeta] = useState({ name: "Platform Beta", floor: "Floor 2", supervisor: "Dilhani Cooray" });
 
@@ -21,6 +28,12 @@ export default function PlatformReportHub() {
 
   const [discrepancyNote, setDiscrepancyNote] = useState("");
   const [submitStatus, setSubmitStatus] = useState(false);
+
+  // 🆕 Mocked Admin Broadcast Feed state for InCharges to check response statuses
+  const [adminMessages, setAdminMessages] = useState([
+    { id: 1, sender: "System Command (Admin)", text: "Verify serial numbers on the broken laptop immediately.", time: "09:15 AM", type: "urgent" },
+    { id: 2, sender: "Floor Keeper (Gayan)", text: "Platform Beta telemetry sync confirmed. Keep scanning.", time: "09:02 AM", type: "info" }
+  ]);
 
   const handleUpdateCount = (category, field, delta) => {
     setDevices(prev => {
@@ -46,11 +59,18 @@ export default function PlatformReportHub() {
     setTimeout(() => setSubmitStatus(false), 3000);
   };
 
+  // Log Out Execution Routine
+  const handleLogout = () => {
+    localStorage.removeItem("app_session");
+    alert("InCharge terminal link closed.");
+    navigate('/login');
+  };
+
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
+    <div className="max-w-2xl mx-auto space-y-6 p-4 min-h-screen bg-zinc-950 text-zinc-100">
       
-      {/* Identity Profile Badge */}
-      <div className="bg-brand-darkGray border border-zinc-800 p-5 rounded-xl flex justify-between items-center">
+      {/* Identity Profile Badge with Session Controls */}
+      <div className="bg-brand-darkGray border border-zinc-800 p-5 rounded-xl flex justify-between items-center gap-4 shadow-md">
         <div>
           <span className="text-[10px] font-bold text-brand-neonCyan bg-brand-neonCyan/10 border border-brand-neonCyan/20 px-2 py-0.5 rounded uppercase tracking-wider">
             InCharge Console
@@ -58,9 +78,61 @@ export default function PlatformReportHub() {
           <h1 className="text-2xl font-black text-white mt-1.5 tracking-tight">{platformMeta.name}</h1>
           <p className="text-xs text-zinc-500 mt-0.5">Assigned Level Location: <span className="text-zinc-300 font-semibold">{platformMeta.floor}</span></p>
         </div>
-        <div className="text-right text-xs">
-          <p className="text-zinc-500">Unit Lead Name</p>
-          <p className="text-white font-bold">{platformMeta.supervisor}</p>
+        
+        <div className="flex flex-col items-end gap-3 shrink-0">
+          <div className="text-right text-xs">
+            <p className="text-zinc-500 text-[10px] uppercase font-bold tracking-wider">Unit Lead Name</p>
+            <p className="text-white font-bold">{platformMeta.supervisor}</p>
+          </div>
+          
+          {/* Secure Session Terminate Trigger Button */}
+          <button 
+            type="button"
+            onClick={handleLogout}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 bg-zinc-900 hover:bg-brand-neonRed/10 border border-zinc-800 hover:border-brand-neonRed/30 rounded-lg text-xs font-bold text-zinc-400 hover:text-brand-neonRed tracking-wide uppercase transition-all"
+          >
+            <LogOut size={13} />
+            <span>Sign Out</span>
+          </button>
+        </div>
+      </div>
+
+      {/* =========================================================
+          🆕 ADMIN & KEEPER LIVE RESPONSE DESK FEED
+          ========================================================= */}
+      <div className="bg-brand-darkGray/60 border border-zinc-900 rounded-xl p-5 space-y-3">
+        <div className="flex items-center justify-between border-b border-zinc-900 pb-2">
+          <div className="flex items-center gap-2">
+            <Radio size={14} className="text-brand-neonCyan animate-pulse" />
+            <h2 className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Command Console Feedback Wire</h2>
+          </div>
+          <span className="text-[10px] font-mono font-medium text-zinc-500 flex items-center gap-1">
+            <Clock size={11} /> Real-time active link
+          </span>
+        </div>
+
+        <div className="space-y-2.5 max-h-40 overflow-y-auto pr-1">
+          {adminMessages.map((msg) => (
+            <div 
+              key={msg.id} 
+              className={`p-3 rounded-lg border text-xs leading-relaxed flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1
+                ${msg.type === 'urgent' 
+                  ? 'bg-brand-neonRed/[0.02] border-brand-neonRed/20 text-zinc-200' 
+                  : 'bg-zinc-950/40 border-zinc-900 text-zinc-400'
+                }
+              `}
+            >
+              <div>
+                <span className={`font-bold mr-1.5 inline-flex items-center gap-1
+                  ${msg.type === 'urgent' ? 'text-brand-neonRed' : 'text-brand-neonCyan'}
+                `}>
+                  <UserCheck size={11} /> {msg.sender}:
+                </span>
+                <span>{msg.text}</span>
+              </div>
+              <span className="text-[10px] font-mono text-zinc-600 shrink-0 self-end sm:self-start">{msg.time}</span>
+            </div>
+          ))}
         </div>
       </div>
 
