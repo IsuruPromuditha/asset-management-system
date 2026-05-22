@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+@theme {
+  /* Define the custom neon cyber tracking theme palettes */
+  --color-brand-darkGray: #121214;
+  --color-brand-neonGreen: #39ff14;
+  --color-brand-neonCyan: #00f3ff;
+  --color-brand-neonRed: #ff073a;
+}
+
+/* Optional base styling to give your application a seamless dark mode body layout */
+@layer base {
+  body {
+    @apply bg-[#09090b] text-zinc-100 antialiased;
+    background-color: #09090b;
+  }
+}
