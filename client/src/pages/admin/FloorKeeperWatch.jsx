@@ -28,7 +28,6 @@ const initialFloorMeta = {
   4: { name: "Floor 4 - Marketing", keeper: "Dilini Cooray" }
 };
 
-// Structural Data Hydration updating itemsChecked to individual device categories
 const initialPlatformsData = {
   1: [
     { id: "P1-A", name: "Platform Alpha", responsible: "Asanka Perera", status: "completed", lastChecked: "10:30 AM", assets: { laptops: { checked: 15, total: 15 }, phones: { checked: 10, total: 10 } } },
@@ -107,7 +106,6 @@ export default function FloorKeeperWatch() {
   const anomalyCount = platforms.filter(p => p.status === 'failed').length;
   const isFloorFullyChecked = completedCount === totalPlatforms && totalPlatforms > 0;
 
-  // Real-time aggregate count computations for devices across active floor metrics
   const floorTotals = platforms.reduce((acc, p) => {
     acc.laptopsChecked += p.assets.laptops.checked;
     acc.laptopsTotal += p.assets.laptops.total;
@@ -193,20 +191,20 @@ export default function FloorKeeperWatch() {
   };
 
   return (
-    <div className="space-y-6 relative">
+    <div className="space-y-6 relative px-4 sm:px-6 max-w-7xl mx-auto text-zinc-100">
       
       {/* Toast Alert Frame */}
       {alertStatus.visible && (
-        <div className={`fixed top-6 right-6 z-50 flex items-center gap-3 px-5 py-3 rounded-xl border shadow-xl animate-bounce bg-zinc-900 ${alertStatus.type === 'success' ? 'border-brand-neonGreen text-brand-neonGreen' : 'border-brand-neonRed text-brand-neonRed'}`}>
-          <BellRing size={18} />
+        <div className={`fixed top-4 right-4 left-4 sm:left-auto z-50 flex items-center gap-3 px-5 py-3 rounded-xl border shadow-xl bg-zinc-900 ${alertStatus.type === 'success' ? 'border-brand-neonGreen text-brand-neonGreen' : 'border-brand-neonRed text-brand-neonRed'}`}>
+          <BellRing size={18} className="shrink-0" />
           <span className="text-xs font-semibold tracking-wide text-zinc-100">{alertStatus.message}</span>
         </div>
       )}
 
       {/* Header Profile Frame */}
-      <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4 border-b border-brand-darkGray pb-5">
-        <div className="flex items-center gap-4">
-          <button onClick={() => navigate('/admin')} className="p-2.5 bg-brand-darkGray border border-zinc-800 text-zinc-400 hover:text-white rounded-xl transition-colors">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-zinc-800 pb-5">
+        <div className="flex items-start gap-4">
+          <button onClick={() => navigate('/admin')} className="p-2.5 bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white rounded-xl transition-colors shrink-0 mt-1">
             <ArrowLeft size={18} />
           </button>
           <div>
@@ -214,22 +212,24 @@ export default function FloorKeeperWatch() {
               <Layers size={12} />
               <span>Floor Supervisor Monitoring Hub</span>
             </div>
-            <h1 className="text-3xl font-bold text-white tracking-tight mt-1">{currentFloorInfo.name}</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight mt-1">{currentFloorInfo.name}</h1>
           </div>
         </div>
         
-        <div className="flex flex-wrap items-center gap-3">
-          <button onClick={() => { setNewKeeper(prev => ({ ...prev, targetFloor: activeFloor.toString() })); setIsKeeperModalOpen(true); }} className="flex items-center gap-2 px-3.5 py-2 bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white rounded-lg text-xs font-medium transition-colors">
-            <UserPlus size={14} className="text-brand-neonCyan" />
-            <span>Manage Keepers</span>
-          </button>
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:w-auto">
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <button onClick={() => { setNewKeeper(prev => ({ ...prev, targetFloor: activeFloor.toString() })); setIsKeeperModalOpen(true); }} className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white rounded-lg text-xs font-medium transition-colors">
+              <UserPlus size={14} className="text-brand-neonCyan" />
+              <span>Manage Keepers</span>
+            </button>
 
-          <button onClick={() => setIsPlatformModalOpen(true)} className="flex items-center gap-2 px-3.5 py-2 bg-brand-neonCyan/10 border border-brand-neonCyan/20 text-brand-neonCyan hover:bg-brand-neonCyan/20 rounded-lg text-xs font-medium transition-all">
-            <Plus size={14} />
-            <span>Add New Platform</span>
-          </button>
+            <button onClick={() => setIsPlatformModalOpen(true)} className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-3.5 py-2.5 bg-brand-neonCyan/10 border border-brand-neonCyan/20 text-brand-neonCyan hover:bg-brand-neonCyan/20 rounded-lg text-xs font-medium transition-all">
+              <Plus size={14} />
+              <span>Add Platform</span>
+            </button>
+          </div>
 
-          <div className="bg-brand-darkGray border border-zinc-800 px-4 py-2.5 rounded-xl flex items-center gap-3">
+          <div className="bg-zinc-900 border border-zinc-800 px-4 py-2 rounded-xl flex items-center gap-3 w-full sm:w-auto">
             <div className="w-8 h-8 rounded-full bg-brand-neonCyan/10 border border-brand-neonCyan/20 flex items-center justify-center text-brand-neonCyan shrink-0">
               <User size={14} />
             </div>
@@ -242,11 +242,11 @@ export default function FloorKeeperWatch() {
       </div>
 
       {/* Inline Tab Menu */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-2 border-b border-zinc-900 scrollbar-none">
+      <div className="flex items-center gap-2 overflow-x-auto pb-2 border-b border-zinc-900 scrollbar-none snap-x">
         {Object.keys(floors).map((id) => {
           const floorId = parseInt(id);
           return (
-            <button key={floorId} onClick={() => { handleTabChange(floorId); setSearch(""); }} className={`px-4 py-2 text-xs font-semibold rounded-lg tracking-wide border transition-all shrink-0 ${activeFloor === floorId ? 'bg-brand-neonCyan/10 border-brand-neonCyan/30 text-brand-neonCyan' : 'bg-brand-darkGray/40 border-zinc-800/80 text-zinc-400 hover:text-white'}`}>
+            <button key={floorId} onClick={() => { handleTabChange(floorId); setSearch(""); }} className={`px-4 py-2 text-xs font-semibold rounded-lg tracking-wide border transition-all shrink-0 snap-content ${activeFloor === floorId ? 'bg-brand-neonCyan/10 border-brand-neonCyan/30 text-brand-neonCyan' : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white'}`}>
               Floor {floorId}
             </button>
           );
@@ -254,62 +254,62 @@ export default function FloorKeeperWatch() {
       </div>
 
       {/* Dynamic Device Category Summary Panels */}
-      <div className="grid grid-cols-1 xl:grid-cols-5 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
         {/* Status Metrics Block */}
-        <div className="xl:col-span-3 grid grid-cols-3 gap-4 bg-zinc-950/40 border border-zinc-900 p-4 rounded-xl">
-          <div className="bg-brand-darkGray/40 border border-zinc-800/60 rounded-xl p-3 flex flex-col justify-center">
-            <span className="text-[10px] uppercase font-bold text-zinc-500 tracking-wider flex items-center gap-1">
-              <CheckCircle2 size={10} className="text-brand-neonGreen" /> Verified Hubs
+        <div className="lg:col-span-3 grid grid-cols-3 gap-2 sm:gap-4 bg-zinc-950/40 border border-zinc-900 p-3 sm:p-4 rounded-xl">
+          <div className="bg-zinc-900/40 border border-zinc-800/60 rounded-xl p-2.5 sm:p-3 flex flex-col justify-center">
+            <span className="text-[9px] sm:text-[10px] uppercase font-bold text-zinc-500 tracking-wider flex items-center gap-1">
+              <CheckCircle2 size={10} className="text-brand-neonGreen shrink-0" /> <span className="truncate">Verified</span>
             </span>
-            <span className="text-xl font-bold text-white mt-1">{completedCount} <span className="text-xs font-medium text-zinc-600">/ {totalPlatforms}</span></span>
+            <span className="text-lg sm:text-xl font-bold text-white mt-1">{completedCount} <span className="text-[10px] sm:text-xs font-medium text-zinc-600">/{totalPlatforms}</span></span>
           </div>
-          <div className="bg-brand-darkGray/40 border border-zinc-800/60 rounded-xl p-3 flex flex-col justify-center">
-            <span className="text-[10px] uppercase font-bold text-zinc-500 tracking-wider flex items-center gap-1">
-              <Clock size={10} className="text-brand-neonCyan" /> Active / Pending
+          <div className="bg-zinc-900/40 border border-zinc-800/60 rounded-xl p-2.5 sm:p-3 flex flex-col justify-center">
+            <span className="text-[9px] sm:text-[10px] uppercase font-bold text-zinc-500 tracking-wider flex items-center gap-1">
+              <Clock size={10} className="text-brand-neonCyan shrink-0" /> <span className="truncate">Active</span>
             </span>
-            <span className="text-xl font-bold text-white mt-1">{pendingCount}</span>
+            <span className="text-lg sm:text-xl font-bold text-white mt-1">{pendingCount}</span>
           </div>
-          <div className="bg-brand-darkGray/40 border border-zinc-800/60 rounded-xl p-3 flex flex-col justify-center">
-            <span className="text-[10px] uppercase font-bold text-zinc-500 tracking-wider flex items-center gap-1">
-              <AlertOctagon size={10} className="text-brand-neonRed" /> Anomalies
+          <div className="bg-zinc-900/40 border border-zinc-800/60 rounded-xl p-2.5 sm:p-3 flex flex-col justify-center">
+            <span className="text-[9px] sm:text-[10px] uppercase font-bold text-zinc-500 tracking-wider flex items-center gap-1">
+              <AlertOctagon size={10} className="text-brand-neonRed shrink-0" /> <span className="truncate">Anomalies</span>
             </span>
-            <span className="text-xl font-bold text-white mt-1">{anomalyCount}</span>
+            <span className="text-lg sm:text-xl font-bold text-white mt-1">{anomalyCount}</span>
           </div>
         </div>
 
-        {/* Global Device Count Breakdowns on Selected Floor */}
-        <div className="grid grid-cols-2 gap-4 bg-zinc-950/40 border border-zinc-900 p-4 rounded-xl xl:col-span-2">
-          <div className="bg-zinc-900/60 border border-zinc-800/80 rounded-xl p-3 flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-zinc-800 text-zinc-300"><Laptop size={16} /></div>
-            <div>
-              <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Laptops (Floor)</p>
-              <p className="text-base font-bold text-white mt-0.5">{floorTotals.laptopsChecked} <span className="text-xs text-zinc-500">/ {floorTotals.laptopsTotal}</span></p>
+        {/* Global Device Count Breakdowns */}
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 bg-zinc-950/40 border border-zinc-900 p-3 sm:p-4 rounded-xl lg:col-span-2">
+          <div className="bg-zinc-900/60 border border-zinc-800/80 rounded-xl p-3 flex items-center gap-2 sm:gap-3">
+            <div className="p-2 rounded-lg bg-zinc-800 text-zinc-300 shrink-0"><Laptop size={16} /></div>
+            <div className="min-w-0">
+              <p className="text-[9px] sm:text-[10px] font-bold text-zinc-500 uppercase tracking-wider truncate">Laptops (Floor)</p>
+              <p className="text-sm sm:text-base font-bold text-white mt-0.5">{floorTotals.laptopsChecked} <span className="text-xs text-zinc-500">/ {floorTotals.laptopsTotal}</span></p>
             </div>
           </div>
-          <div className="bg-zinc-900/60 border border-zinc-800/80 rounded-xl p-3 flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-zinc-800 text-zinc-300"><Smartphone size={16} /></div>
-            <div>
-              <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Phones (Floor)</p>
-              <p className="text-base font-bold text-white mt-0.5">{floorTotals.phonesChecked} <span className="text-xs text-zinc-500">/ {floorTotals.phonesTotal}</span></p>
+          <div className="bg-zinc-900/60 border border-zinc-800/80 rounded-xl p-3 flex items-center gap-2 sm:gap-3">
+            <div className="p-2 rounded-lg bg-zinc-800 text-zinc-300 shrink-0"><Smartphone size={16} /></div>
+            <div className="min-w-0">
+              <p className="text-[9px] sm:text-[10px] font-bold text-zinc-500 uppercase tracking-wider truncate">Phones (Floor)</p>
+              <p className="text-sm sm:text-base font-bold text-white mt-0.5">{floorTotals.phonesChecked} <span className="text-xs text-zinc-500">/ {floorTotals.phonesTotal}</span></p>
             </div>
           </div>
         </div>
       </div>
 
       {/* Control Utility Toolbar */}
-      <div className="flex flex-col md:flex-row items-center justify-between gap-4 bg-brand-darkGray p-4 rounded-xl border border-zinc-800">
+      <div className="flex flex-col md:flex-row items-center justify-between gap-4 bg-zinc-900 p-4 rounded-xl border border-zinc-800">
         <div className="relative w-full md:max-w-xs">
           <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" />
           <input
             type="text" placeholder="Filter platforms or personnel..." value={search} onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-zinc-950 border border-zinc-800 rounded-lg pl-9 pr-4 py-2 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-brand-neonCyan/40"
+            className="w-full bg-zinc-950 border border-zinc-800 rounded-lg pl-9 pr-4 py-2.5 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-brand-neonCyan/40"
           />
         </div>
 
         <button
           onClick={handleSendKeeperAlert} disabled={totalPlatforms === 0}
           className={`w-full md:w-auto px-5 py-2.5 rounded-xl border text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-2
-            ${totalPlatforms === 0 ? 'bg-zinc-900 text-zinc-600 border-zinc-800 cursor-not-allowed' :
+            ${totalPlatforms === 0 ? 'bg-zinc-950 text-zinc-600 border-zinc-800 cursor-not-allowed' :
               isFloorFullyChecked ? 'bg-brand-neonGreen/5 border-brand-neonGreen/20 text-brand-neonGreen cursor-not-allowed' : 'bg-brand-neonRed/10 border-brand-neonRed/30 text-brand-neonRed hover:bg-brand-neonRed hover:text-white'
             }`}
         >
@@ -319,7 +319,7 @@ export default function FloorKeeperWatch() {
       </div>
 
       {/* Platforms Display Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredPlatforms.length > 0 ? (
           filteredPlatforms.map((platform) => {
             const lapPerc = (platform.assets.laptops.checked / (platform.assets.laptops.total || 1)) * 100;
@@ -328,7 +328,7 @@ export default function FloorKeeperWatch() {
             return (
               <div 
                 key={platform.id}
-                className={`bg-brand-darkGray border rounded-xl p-5 flex flex-col justify-between transition-all group relative
+                className={`bg-zinc-900/60 border rounded-xl p-5 flex flex-col justify-between transition-all group relative
                   ${platform.status === 'completed' ? 'border-brand-neonGreen/10 hover:border-brand-neonGreen/30' : ''}
                   ${platform.status === 'in-progress' ? 'border-brand-neonCyan/30 hover:border-brand-neonCyan' : ''}
                   ${platform.status === 'pending' ? 'border-zinc-800/80' : ''}
@@ -337,14 +337,14 @@ export default function FloorKeeperWatch() {
               >
                 <div>
                   <div className="flex items-start justify-between gap-2">
-                    <div>
-                      <h3 className="text-lg font-bold text-white group-hover:text-brand-neonCyan transition-colors">{platform.name}</h3>
-                      <p className="text-xs text-zinc-500 mt-0.5 flex items-center gap-1">
-                        <User size={12} /> Lead: {platform.responsible}
+                    <div className="min-w-0">
+                      <h3 className="text-lg font-bold text-white group-hover:text-brand-neonCyan transition-colors truncate">{platform.name}</h3>
+                      <p className="text-xs text-zinc-500 mt-0.5 flex items-center gap-1 truncate">
+                        <User size={12} className="shrink-0" /> <span className="truncate">Lead: {platform.responsible}</span>
                       </p>
                     </div>
 
-                    <div className="flex items-center">
+                    <div className="shrink-0">
                       {platform.status === 'completed' && <span className="bg-brand-neonGreen/10 text-brand-neonGreen border border-brand-neonGreen/20 text-[10px] font-bold px-2 py-0.5 rounded-md">VERIFIED</span>}
                       {platform.status === 'in-progress' && <span className="bg-brand-neonCyan/10 text-brand-neonCyan border border-brand-neonCyan/20 text-[10px] font-bold px-2 py-0.5 rounded-md animate-pulse">AUDITING</span>}
                       {platform.status === 'pending' && <span className="bg-zinc-800 text-zinc-500 border border-zinc-700 text-[10px] font-bold px-2 py-0.5 rounded-md">PENDING</span>}
@@ -354,24 +354,22 @@ export default function FloorKeeperWatch() {
 
                   {/* Device Category Inventory Bars */}
                   <div className="mt-5 space-y-3">
-                    {/* Laptop Counter Item */}
                     <div className="space-y-1">
                       <div className="flex justify-between text-xs">
                         <span className="text-zinc-400 flex items-center gap-1.5"><Laptop size={12} /> Laptops</span>
                         <span className="text-white font-mono font-semibold">{platform.assets.laptops.checked} / {platform.assets.laptops.total}</span>
                       </div>
-                      <div className="w-full bg-zinc-950 h-1 rounded-full overflow-hidden border border-zinc-900/60">
+                      <div className="w-full bg-zinc-950 h-1.5 rounded-full overflow-hidden border border-zinc-900/60">
                         <div className={`h-full rounded-full ${platform.status === 'failed' ? 'bg-brand-neonRed' : 'bg-brand-neonGreen'}`} style={{ width: `${lapPerc}%` }} />
                       </div>
                     </div>
 
-                    {/* Phone Counter Item */}
                     <div className="space-y-1">
                       <div className="flex justify-between text-xs">
                         <span className="text-zinc-400 flex items-center gap-1.5"><Smartphone size={12} /> Phones</span>
                         <span className="text-white font-mono font-semibold">{platform.assets.phones.checked} / {platform.assets.phones.total}</span>
                       </div>
-                      <div className="w-full bg-zinc-950 h-1 rounded-full overflow-hidden border border-zinc-900/60">
+                      <div className="w-full bg-zinc-950 h-1.5 rounded-full overflow-hidden border border-zinc-900/60">
                         <div className={`h-full rounded-full ${platform.status === 'failed' ? 'bg-brand-neonRed' : 'bg-brand-neonCyan'}`} style={{ width: `${phnPerc}%` }} />
                       </div>
                     </div>
@@ -379,18 +377,18 @@ export default function FloorKeeperWatch() {
                 </div>
 
                 {platform.discrepancy && (
-                  <div className="mt-4 p-2 bg-brand-neonRed/10 border border-brand-neonRed/20 rounded-lg text-brand-neonRed text-xs font-semibold flex items-center gap-2">
-                    <img src="" alt="" /><AlertOctagon size={14} />
+                  <div className="mt-4 p-2.5 bg-brand-neonRed/10 border border-brand-neonRed/20 rounded-lg text-brand-neonRed text-xs font-semibold flex items-center gap-2">
+                    <AlertOctagon size={14} className="shrink-0" />
                     <span>{platform.discrepancy}</span>
                   </div>
                 )}
 
                 <div className="mt-4 pt-3 border-t border-zinc-800/60 flex items-center justify-between text-[11px] text-zinc-500 font-medium">
-                  <div className="flex items-center gap-2">
-                    <button onClick={() => { setEditingPlatform(JSON.parse(JSON.stringify(platform))); setIsEditPlatformModalOpen(true); }} className="p-1 text-zinc-500 hover:text-brand-neonCyan hover:bg-brand-neonCyan/10 rounded">
+                  <div className="flex items-center gap-1">
+                    <button onClick={() => { setEditingPlatform(JSON.parse(JSON.stringify(platform))); setIsEditPlatformModalOpen(true); }} className="p-1.5 text-zinc-500 hover:text-brand-neonCyan hover:bg-brand-neonCyan/10 rounded-lg transition-colors">
                       <Edit2 size={13} />
                     </button>
-                    <button onClick={() => { setPlatformIdToDelete(platform.id); setIsDeletePlatformModalOpen(true); }} className="p-1 text-zinc-500 hover:text-brand-neonRed hover:bg-brand-neonRed/10 rounded">
+                    <button onClick={() => { setPlatformIdToDelete(platform.id); setIsDeletePlatformModalOpen(true); }} className="p-1.5 text-zinc-500 hover:text-brand-neonRed hover:bg-brand-neonRed/10 rounded-lg transition-colors">
                       <Trash2 size={13} />
                     </button>
                   </div>
@@ -406,20 +404,20 @@ export default function FloorKeeperWatch() {
         )}
       </div>
 
-      {/* MODAL DIALOG: ASSIGN KEEPER */}
+      {/* MODAL DIALOGS - Wrapped in uniform padding and touch safe sizes */}
       {isKeeperModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-brand-darkGray border border-zinc-800 rounded-xl max-w-sm w-full p-6 space-y-4">
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-4">
+          <div className="bg-zinc-900 border border-zinc-800 rounded-2xl max-w-sm w-full p-6 space-y-4 shadow-2xl animate-in fade-in slide-in-from-bottom-4 duration-200">
             <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
               <h3 className="text-sm font-bold text-white flex items-center gap-2 uppercase tracking-wider">
-                <UserPlus size={16} className="text-brand-neonCyan" /> Reassign Floor Keeper
+                <UserPlus size={16} className="text-brand-neonCyan" /> Reassign Keeper
               </h3>
               <button onClick={() => setIsKeeperModalOpen(false)} className="text-zinc-500 hover:text-white p-1 rounded-lg"><X size={16} /></button>
             </div>
             <form onSubmit={handleAddKeeper} className="space-y-4 text-xs">
               <div>
                 <label className="block text-zinc-400 font-medium mb-1.5">Select Target Level</label>
-                <select value={newKeeper.targetFloor} onChange={e => setNewKeeper({...newKeeper, targetFloor: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-2.5 text-white focus:outline-none">
+                <select value={newKeeper.targetFloor} onChange={e => setNewKeeper({...newKeeper, targetFloor: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-white focus:outline-none">
                   {Object.entries(floors).map(([id, meta]) => (
                     <option key={id} value={id}>{meta.name}</option>
                   ))}
@@ -427,11 +425,11 @@ export default function FloorKeeperWatch() {
               </div>
               <div>
                 <label className="block text-zinc-400 font-medium mb-1.5">Personnel Name</label>
-                <input type="text" required value={newKeeper.keeperName} onChange={e => setNewKeeper({...newKeeper, keeperName: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-2.5 text-white focus:outline-none" />
+                <input type="text" required value={newKeeper.keeperName} onChange={e => setNewKeeper({...newKeeper, keeperName: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-white focus:outline-none" />
               </div>
-              <div className="pt-2 flex justify-end gap-2">
-                <button type="button" onClick={() => setIsKeeperModalOpen(false)} className="px-4 py-2 bg-zinc-900 text-zinc-400 rounded-lg border border-zinc-800">Cancel</button>
-                <button type="submit" className="px-4 py-2 bg-brand-neonCyan text-zinc-950 font-bold rounded-lg">Save Assignment</button>
+              <div className="pt-2 flex flex-col-reverse sm:flex-row justify-end gap-2">
+                <button type="button" onClick={() => setIsKeeperModalOpen(false)} className="w-full sm:w-auto px-4 py-2.5 bg-zinc-950 text-zinc-400 rounded-lg border border-zinc-800">Cancel</button>
+                <button type="submit" className="w-full sm:w-auto px-4 py-2.5 bg-brand-neonCyan text-zinc-950 font-bold rounded-lg">Save Assignment</button>
               </div>
             </form>
           </div>
@@ -440,8 +438,8 @@ export default function FloorKeeperWatch() {
 
       {/* MODAL DIALOG: INSTANTIATE NEW PLATFORM */}
       {isPlatformModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-brand-darkGray border border-zinc-800 rounded-xl max-w-sm w-full p-6 space-y-4">
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-4">
+          <div className="bg-zinc-900 border border-zinc-800 rounded-2xl max-w-sm w-full p-6 space-y-4 shadow-2xl animate-in fade-in slide-in-from-bottom-4 duration-200">
             <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
               <h3 className="text-sm font-bold text-white flex items-center gap-2 uppercase tracking-wider">
                 <LayoutGrid size={16} className="text-brand-neonCyan" /> Create Platform (Floor {activeFloor})
@@ -450,26 +448,26 @@ export default function FloorKeeperWatch() {
             </div>
             <form onSubmit={handleAddPlatform} className="space-y-4 text-xs">
               <div>
-                <label className="block text-zinc-400 font-medium mb-1.5">Platform Designation Name</label>
-                <input type="text" placeholder="e.g. Platform Epsilon" required value={newPlatform.name} onChange={e => setNewPlatform({...newPlatform, name: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-2.5 text-white focus:outline-none" />
+                <label className="block text-zinc-400 font-medium mb-1.5">Platform Name</label>
+                <input type="text" placeholder="e.g. Platform Epsilon" required value={newPlatform.name} onChange={e => setNewPlatform({...newPlatform, name: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-white focus:outline-none" />
               </div>
               <div>
                 <label className="block text-zinc-400 font-medium mb-1.5">Responsible Lead Officer</label>
-                <input type="text" placeholder="e.g. Nimmi Fernando" required value={newPlatform.responsible} onChange={e => setNewPlatform({...newPlatform, responsible: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-2.5 text-white focus:outline-none" />
+                <input type="text" placeholder="e.g. Nimmi Fernando" required value={newPlatform.responsible} onChange={e => setNewPlatform({...newPlatform, responsible: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-white focus:outline-none" />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-zinc-400 font-medium mb-1.5 flex items-center gap-1"><Laptop size={12}/> Laptop Quota</label>
-                  <input type="number" min="0" required value={newPlatform.targetLaptops} onChange={e => setNewPlatform({...newPlatform, targetLaptops: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-2.5 text-white focus:outline-none font-mono" />
+                  <label className="block text-zinc-400 font-medium mb-1.5 flex items-center gap-1"><Laptop size={12}/> Laptops</label>
+                  <input type="number" min="0" required value={newPlatform.targetLaptops} onChange={e => setNewPlatform({...newPlatform, targetLaptops: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-white focus:outline-none font-mono" />
                 </div>
                 <div>
-                  <label className="block text-zinc-400 font-medium mb-1.5 flex items-center gap-1"><Smartphone size={12}/> Phone Quota</label>
-                  <input type="number" min="0" required value={newPlatform.targetPhones} onChange={e => setNewPlatform({...newPlatform, targetPhones: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-2.5 text-white focus:outline-none font-mono" />
+                  <label className="block text-zinc-400 font-medium mb-1.5 flex items-center gap-1"><Smartphone size={12}/> Phones</label>
+                  <input type="number" min="0" required value={newPlatform.targetPhones} onChange={e => setNewPlatform({...newPlatform, targetPhones: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-white focus:outline-none font-mono" />
                 </div>
               </div>
-              <div className="pt-2 flex justify-end gap-2">
-                <button type="button" onClick={() => setIsPlatformModalOpen(false)} className="px-4 py-2 bg-zinc-900 text-zinc-400 rounded-lg border border-zinc-800">Cancel</button>
-                <button type="submit" className="px-4 py-2 bg-brand-neonCyan text-zinc-950 font-bold rounded-lg">Instantiate Hub</button>
+              <div className="pt-2 flex flex-col-reverse sm:flex-row justify-end gap-2">
+                <button type="button" onClick={() => setIsPlatformModalOpen(false)} className="w-full sm:w-auto px-4 py-2.5 bg-zinc-950 text-zinc-400 rounded-lg border border-zinc-800">Cancel</button>
+                <button type="submit" className="w-full sm:w-auto px-4 py-2.5 bg-brand-neonCyan text-zinc-950 font-bold rounded-lg">Instantiate Hub</button>
               </div>
             </form>
           </div>
@@ -478,131 +476,104 @@ export default function FloorKeeperWatch() {
 
       {/* MODAL DIALOG: UPDATE EXISTING PLATFORM */}
       {isEditPlatformModalOpen && editingPlatform && (
-        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-brand-darkGray border border-zinc-800 rounded-xl max-w-sm w-full p-6 space-y-4">
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-4">
+          <div className="bg-zinc-900 border border-zinc-800 rounded-2xl max-w-sm w-full p-6 space-y-4 shadow-2xl">
             <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
               <h3 className="text-sm font-bold text-white flex items-center gap-2 uppercase tracking-wider">
-                <Edit2 size={15} className="text-brand-neonCyan" /> Modify Platform Metrics
+                <Edit2 size={15} className="text-brand-neonCyan" /> Modify Metrics
               </h3>
               <button onClick={() => { setIsEditPlatformModalOpen(false); setEditingPlatform(null); }} className="text-zinc-500 hover:text-white p-1 rounded-lg"><X size={16} /></button>
             </div>
             <form onSubmit={handleUpdatePlatform} className="space-y-4 text-xs">
               <div>
-                <label className="block text-zinc-400 font-medium mb-1.5">Platform Designation Name</label>
-                <input type="text" required value={editingPlatform.name} onChange={e => setEditingPlatform({...editingPlatform, name: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-2.5 text-white focus:outline-none" />
+                <label className="block text-zinc-400 font-medium mb-1.5">Platform Name</label>
+                <input type="text" required value={editingPlatform.name} onChange={e => setEditingPlatform({...editingPlatform, name: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-white focus:outline-none" />
               </div>
               <div>
-                <label className="block text-zinc-400 font-medium mb-1.5">Responsible Lead Officer</label>
-                <input type="text" required value={editingPlatform.responsible} onChange={e => setEditingPlatform({...editingPlatform, responsible: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-2.5 text-white focus:outline-none" />
+                <label className="block text-zinc-400 font-medium mb-1.5">Responsible Lead</label>
+                <input type="text" required value={editingPlatform.responsible} onChange={e => setEditingPlatform({...editingPlatform, responsible: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-white focus:outline-none" />
               </div>
               
-              <div className="grid grid-cols-2 gap-4 bg-zinc-950/50 p-3 rounded-lg border border-zinc-900">
+              <div className="grid grid-cols-2 gap-4 bg-zinc-950/50 p-3 rounded-xl border border-zinc-850">
                 <div className="space-y-2">
-                  <span className="text-zinc-400 font-bold tracking-wide flex items-center gap-1 text-[10px] uppercase"><Laptop size={11}/> Laptops</span>
+                  <span className="text-zinc-400 font-bold flex items-center gap-1 text-[10px] uppercase"><Laptop size={11}/> Laptops</span>
                   <div className="flex items-center gap-1.5">
                     <input type="number" min="0" max={editingPlatform.assets.laptops.total} value={editingPlatform.assets.laptops.checked} onChange={e => {
                       const val = Math.min(parseInt(e.target.value) || 0, editingPlatform.assets.laptops.total);
                       const updated = { ...editingPlatform };
                       updated.assets.laptops.checked = val;
                       setEditingPlatform(updated);
-                    }} className="w-full bg-zinc-900 border border-zinc-800 rounded p-1.5 font-mono text-center text-white" title="Checked Count" />
+                    }} className="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-2 font-mono text-center text-white" />
                     <span className="text-zinc-600">/</span>
                     <input type="number" min="1" value={editingPlatform.assets.laptops.total} onChange={e => {
-                      const val = parseInt(e.target.value) || 1;
+                      const val = Math.max(1, parseInt(e.target.value) || 1);
                       const updated = { ...editingPlatform };
                       updated.assets.laptops.total = val;
-                      if (updated.assets.laptops.checked > val) updated.assets.laptops.checked = val;
                       setEditingPlatform(updated);
-                    }} className="w-full bg-zinc-900 border border-zinc-800 rounded p-1.5 font-mono text-center text-zinc-400" title="Total Asset Count" />
+                    }} className="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-2 font-mono text-center text-white" />
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <span className="text-zinc-400 font-bold tracking-wide flex items-center gap-1 text-[10px] uppercase"><Smartphone size={11}/> Phones</span>
+                  <span className="text-zinc-400 font-bold flex items-center gap-1 text-[10px] uppercase"><Smartphone size={11}/> Phones</span>
                   <div className="flex items-center gap-1.5">
                     <input type="number" min="0" max={editingPlatform.assets.phones.total} value={editingPlatform.assets.phones.checked} onChange={e => {
                       const val = Math.min(parseInt(e.target.value) || 0, editingPlatform.assets.phones.total);
                       const updated = { ...editingPlatform };
                       updated.assets.phones.checked = val;
                       setEditingPlatform(updated);
-                    }} className="w-full bg-zinc-900 border border-zinc-800 rounded p-1.5 font-mono text-center text-white" />
+                    }} className="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-2 font-mono text-center text-white" />
                     <span className="text-zinc-600">/</span>
                     <input type="number" min="1" value={editingPlatform.assets.phones.total} onChange={e => {
-                      const val = parseInt(e.target.value) || 1;
+                      const val = Math.max(1, parseInt(e.target.value) || 1);
                       const updated = { ...editingPlatform };
                       updated.assets.phones.total = val;
-                      if (updated.assets.phones.checked > val) updated.assets.phones.checked = val;
                       setEditingPlatform(updated);
-                    }} className="w-full bg-zinc-900 border border-zinc-800 rounded p-1.5 font-mono text-center text-zinc-400" />
+                    }} className="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-2 font-mono text-center text-white" />
                   </div>
                 </div>
               </div>
 
               <div>
-                <label className="block text-zinc-400 font-medium mb-1.5">Audit Evaluation Status</label>
-                <select 
-                  value={editingPlatform.status} 
-                  onChange={e => {
-                    const nextStatus = e.target.value;
-                    let lastCheckText = editingPlatform.lastChecked;
-                    const updated = JSON.parse(JSON.stringify(editingPlatform));
-                    
-                    if (nextStatus === 'completed') {
-                      updated.assets.laptops.checked = updated.assets.laptops.total;
-                      updated.assets.phones.checked = updated.assets.phones.total;
-                      lastCheckText = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                    } else if (nextStatus === 'pending') {
-                      updated.assets.laptops.checked = 0;
-                      updated.assets.phones.checked = 0;
-                      lastCheckText = "Not Started";
-                    } else if (nextStatus === 'in-progress') {
-                      lastCheckText = "Running Now";
-                    }
-
-                    setEditingPlatform({
-                      ...updated, 
-                      status: nextStatus,
-                      lastChecked: lastCheckText,
-                      ...(nextStatus !== 'failed' && { discrepancy: undefined })
-                    });
-                  }}
-                  className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-2.5 text-white focus:outline-none"
-                >
+                <label className="block text-zinc-400 font-medium mb-1.5">Audit Status Status</label>
+                <select value={editingPlatform.status} onChange={e => setEditingPlatform({...editingPlatform, status: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-white focus:outline-none">
                   <option value="pending">Pending</option>
-                  <option value="in-progress">In Progress (Running)</option>
-                  <option value="completed">Completed (Verified)</option>
-                  <option value="failed">Failed (Anomaly)</option>
+                  <option value="in-progress">In-Progress</option>
+                  <option value="completed">Completed / Verified</option>
+                  <option value="failed">Failed / Anomaly</option>
                 </select>
               </div>
 
               {editingPlatform.status === 'failed' && (
                 <div>
-                  <label className="block text-brand-neonRed font-medium mb-1.5">Discrepancy Log Note</label>
-                  <input type="text" placeholder="e.g. 1 Laptop Missing" required value={editingPlatform.discrepancy || ""} onChange={e => setEditingPlatform({...editingPlatform, discrepancy: e.target.value})} className="w-full bg-zinc-950 border border-brand-neonRed/30 rounded-lg p-2.5 text-white focus:outline-none" />
+                  <label className="block text-zinc-400 font-medium mb-1.5">Discrepancy Log Note</label>
+                  <input type="text" value={editingPlatform.discrepancy || ""} onChange={e => setEditingPlatform({...editingPlatform, discrepancy: e.target.value})} placeholder="Describe specific details..." className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-white focus:outline-none" />
                 </div>
               )}
 
-              <div className="pt-2 flex justify-end gap-2">
-                <button type="button" onClick={() => { setIsEditPlatformModalOpen(false); setEditingPlatform(null); }} className="px-4 py-2 bg-zinc-900 text-zinc-400 rounded-lg border border-zinc-800">Cancel</button>
-                <button type="submit" className="px-4 py-2 bg-brand-neonCyan text-zinc-950 font-bold rounded-lg">Commit Changes</button>
+              <div className="pt-2 flex flex-col-reverse sm:flex-row justify-end gap-2">
+                <button type="button" onClick={() => { setIsEditPlatformModalOpen(false); setEditingPlatform(null); }} className="w-full sm:w-auto px-4 py-2.5 bg-zinc-950 text-zinc-400 rounded-lg border border-zinc-800">Cancel</button>
+                <button type="submit" className="w-full sm:w-auto px-4 py-2.5 bg-brand-neonCyan text-zinc-950 font-bold rounded-lg">Save Progress</button>
               </div>
             </form>
           </div>
         </div>
       )}
 
-      {/* MODAL DIALOG: DESTRUCTIVE REMOVAL */}
+      {/* MODAL DIALOG: DELETE CONFIRMATION */}
       {isDeletePlatformModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-brand-darkGray border border-brand-neonRed/30 rounded-xl max-w-sm w-full p-6 space-y-4">
-            <div className="flex items-center gap-3 text-brand-neonRed">
-              <Trash2 size={18} />
-              <h3 className="text-sm font-bold uppercase tracking-wider text-white">Purge Platform Architecture</h3>
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-4">
+          <div className="bg-zinc-900 border border-zinc-800 rounded-2xl max-w-xs w-full p-6 space-y-4 shadow-2xl">
+            <div className="text-center space-y-2">
+              <div className="w-10 h-10 bg-brand-neonRed/10 border border-brand-neonRed/20 text-brand-neonRed rounded-full flex items-center justify-center mx-auto">
+                <Trash2 size={18} />
+              </div>
+              <h3 className="text-sm font-bold text-white uppercase tracking-wider">Purge Record?</h3>
+              <p className="text-xs text-zinc-400">This action will destroy this platform item data log from live status updates instantly.</p>
             </div>
-            <p className="text-xs text-zinc-300 leading-relaxed">Are you sure you want to completely tear down this platform workspace from Floor {activeFloor}? All structural logs will be deleted from memory.</p>
-            <div className="pt-2 flex justify-end gap-2 text-xs font-semibold">
-              <button type="button" onClick={() => { setIsDeletePlatformModalOpen(false); setPlatformIdToDelete(null); }} className="px-4 py-2 bg-zinc-900 text-zinc-400 rounded-lg border border-zinc-800">Abort</button>
-              <button type="button" onClick={handleDeletePlatform} className="px-4 py-2 bg-brand-neonRed/20 border border-brand-neonRed/30 text-brand-neonRed hover:bg-brand-neonRed hover:text-white rounded-lg">Confirm Delete</button>
+            <div className="flex flex-col gap-2 pt-2">
+              <button onClick={handleDeletePlatform} className="w-full py-2.5 bg-brand-neonRed text-white font-bold rounded-lg text-xs">Confirm Purge</button>
+              <button onClick={() => { setIsDeletePlatformModalOpen(false); setPlatformIdToDelete(null); }} className="w-full py-2.5 bg-zinc-950 border border-zinc-800 text-zinc-400 rounded-lg text-xs">Cancel</button>
             </div>
           </div>
         </div>
