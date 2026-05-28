@@ -61,7 +61,7 @@ export default function FloorCheckHub() {
     navigate('/login');
   };
 
-  // --- ADMIN INSIGHTS: Global Floor Metrics Computations ---
+  // --- GLOBAL FLOOR METRICS COMPUTATIONS ---
   const totalPlatforms = platforms.length;
   const completedPlatforms = platforms.filter(p => p.status === 'completed').length;
   const flaggedDiscrepancies = platforms.filter(p => p.discrepancy).length;
@@ -72,21 +72,22 @@ export default function FloorCheckHub() {
   const checkedPhones = platforms.reduce((acc, p) => acc + p.assets.phones.checked, 0);
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto p-4 md:p-6 min-h-screen bg-zinc-950 text-zinc-100">
+    <div className="space-y-5 sm:space-y-6 max-w-7xl mx-auto p-0 sm:p-4 md:p-6 min-h-screen bg-zinc-950 text-zinc-100">
       
       {/* Top Floor Profile & Action Header */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-zinc-900 pb-5 gap-4">
-        <div>
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-zinc-900 p-4 sm:p-5 md:px-0 md:pt-0 pb-5 gap-4">
+        <div className="space-y-1">
           <div className="flex items-center gap-2 text-xs font-bold text-brand-neonCyan uppercase tracking-wider">
             <Radio size={14} className="animate-pulse text-brand-neonCyan" />
             <span>Active Duty Floor Inspection Panel</span>
           </div>
-          <h1 className="text-3xl font-extrabold text-white mt-1 tracking-tight">{activeFloorName}</h1>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">{activeFloorName}</h1>
         </div>
 
+        {/* Dynamic header badge layout for touch responsiveness */}
         <div className="flex items-center gap-3 w-full md:w-auto justify-between md:justify-end">
-          <div className="bg-brand-darkGray border border-zinc-800 px-4 py-2 rounded-xl flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-brand-neonCyan/10 border border-brand-neonCyan/20 flex items-center justify-center text-brand-neonCyan">
+          <div className="bg-brand-darkGray border border-zinc-800 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl flex items-center gap-3">
+            <div className="w-8 h-8 rounded-full bg-brand-neonCyan/10 border border-brand-neonCyan/20 flex items-center justify-center text-brand-neonCyan shrink-0">
               <Layers size={14} />
             </div>
             <div>
@@ -95,79 +96,77 @@ export default function FloorCheckHub() {
             </div>
           </div>
 
-          {/* Secure Session Terminate Trigger Button */}
           <button 
             onClick={handleLogout}
-            className="p-3 bg-zinc-900 hover:bg-brand-neonRed/10 border border-zinc-800 hover:border-brand-neonRed/30 rounded-xl text-zinc-400 hover:text-brand-neonRed transition-all duration-150 flex items-center gap-2 text-xs font-bold uppercase tracking-wider"
+            className="px-3 py-2.5 sm:p-3 bg-zinc-900 hover:bg-brand-neonRed/10 border border-zinc-800 hover:border-brand-neonRed/30 rounded-xl text-zinc-400 hover:text-brand-neonRed transition-all duration-150 flex items-center gap-2 text-xs font-bold uppercase tracking-wider cursor-pointer"
             title="Log Out Session"
           >
             <LogOut size={15} />
-            <span className="hidden sm:inline">Exit Hub</span>
+            <span className="inline sm:inline">Exit Hub</span>
           </button>
         </div>
       </div>
 
-      {/* =========================================================
-          🆕 ADMIN STATUS LIVE DASHBOARD PANEL
-          ========================================================= */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* LIVE TELEMETRY DASHBOARD METRICS GRID */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 px-4 sm:p-0">
+        
         {/* Metric 1: Track Progress Status */}
-        <div className="bg-brand-darkGray border border-zinc-900 rounded-xl p-4 flex items-center justify-between">
-          <div>
-            <p className="text-[10px] uppercase font-bold text-zinc-500 tracking-wider">Platform Clearance</p>
-            <h4 className="text-xl font-black font-mono text-white mt-1">{completedPlatforms} / {totalPlatforms}</h4>
+        <div className="bg-brand-darkGray border border-zinc-900 rounded-xl p-3 sm:p-4 flex items-center justify-between gap-2">
+          <div className="min-w-0">
+            <p className="text-[9px] sm:text-[10px] uppercase font-bold text-zinc-500 tracking-wider truncate">Platform Clearance</p>
+            <h4 className="text-lg sm:text-xl font-black font-mono text-white mt-1">{completedPlatforms} / {totalPlatforms}</h4>
           </div>
-          <div className="w-9 h-9 rounded-lg bg-brand-neonGreen/10 border border-brand-neonGreen/20 flex items-center justify-center text-brand-neonGreen">
-            <ShieldCheck size={18} />
+          <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-brand-neonGreen/10 border border-brand-neonGreen/20 flex items-center justify-center text-brand-neonGreen shrink-0">
+            <ShieldCheck size={16} />
           </div>
         </div>
 
         {/* Metric 2: Open Floor Discrepancy Flags */}
-        <div className="bg-brand-darkGray border border-zinc-900 rounded-xl p-4 flex items-center justify-between">
-          <div>
-            <p className="text-[10px] uppercase font-bold text-zinc-500 tracking-wider">Active Exceptions</p>
-            <h4 className={`text-xl font-black font-mono mt-1 ${flaggedDiscrepancies > 0 ? 'text-brand-neonRed' : 'text-zinc-400'}`}>
+        <div className="bg-brand-darkGray border border-zinc-900 rounded-xl p-3 sm:p-4 flex items-center justify-between gap-2">
+          <div className="min-w-0">
+            <p className="text-[9px] sm:text-[10px] uppercase font-bold text-zinc-500 tracking-wider truncate">Active Exceptions</p>
+            <h4 className={`text-lg sm:text-xl font-black font-mono mt-1 truncate ${flaggedDiscrepancies > 0 ? 'text-brand-neonRed' : 'text-zinc-400'}`}>
               {flaggedDiscrepancies} Issue{flaggedDiscrepancies !== 1 ? 's' : ''}
             </h4>
           </div>
-          <div className={`w-9 h-9 rounded-lg flex items-center justify-center border ${flaggedDiscrepancies > 0 ? 'bg-brand-neonRed/10 border-brand-neonRed/20 text-brand-neonRed' : 'bg-zinc-900 border-zinc-800 text-zinc-600'}`}>
-            <AlertCircle size={18} />
+          <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-lg flex items-center justify-center border shrink-0 ${flaggedDiscrepancies > 0 ? 'bg-brand-neonRed/10 border-brand-neonRed/20 text-brand-neonRed' : 'bg-zinc-900 border-zinc-800 text-zinc-600'}`}>
+            <AlertCircle size={16} />
           </div>
         </div>
 
         {/* Metric 3: Global Laptop Auditing Counts */}
-        <div className="bg-brand-darkGray border border-zinc-900 rounded-xl p-4 flex items-center justify-between">
-          <div>
-            <p className="text-[10px] uppercase font-bold text-zinc-500 tracking-wider">Laptop Telemetry</p>
-            <h4 className="text-xl font-black font-mono text-white mt-1">
-              {checkedLaptops} <span className="text-xs font-normal text-zinc-500">/ {totalLaptops}</span>
+        <div className="bg-brand-darkGray border border-zinc-900 rounded-xl p-3 sm:p-4 flex items-center justify-between gap-2">
+          <div className="min-w-0">
+            <p className="text-[9px] sm:text-[10px] uppercase font-bold text-zinc-500 tracking-wider truncate">Laptop Telemetry</p>
+            <h4 className="text-lg sm:text-xl font-black font-mono text-white mt-1 truncate">
+              {checkedLaptops} <span className="text-xs font-normal text-zinc-500">/{totalLaptops}</span>
             </h4>
           </div>
-          <div className="w-9 h-9 rounded-lg bg-zinc-950 border border-zinc-900 flex items-center justify-center text-zinc-400">
-            <Laptop size={16} />
+          <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-zinc-950 border border-zinc-900 flex items-center justify-center text-zinc-400 shrink-0">
+            <Laptop size={15} />
           </div>
         </div>
 
         {/* Metric 4: Global Phone Auditing Counts */}
-        <div className="bg-brand-darkGray border border-zinc-900 rounded-xl p-4 flex items-center justify-between">
-          <div>
-            <p className="text-[10px] uppercase font-bold text-zinc-500 tracking-wider">Smartphone Telemetry</p>
-            <h4 className="text-xl font-black font-mono text-white mt-1">
+        <div className="bg-brand-darkGray border border-zinc-900 rounded-xl p-3 sm:p-4 flex items-center justify-between gap-2">
+          <div className="min-w-0">
+            <p className="text-[9px] sm:text-[10px] uppercase font-bold text-zinc-500 tracking-wider truncate">Phone Telemetry</p>
+            <h4 className="text-lg sm:text-xl font-black font-mono text-white mt-1 truncate">
               {checkedPhones} <span className="text-xs font-normal text-zinc-500">/ {totalPhones}</span>
             </h4>
           </div>
-          <div className="w-9 h-9 rounded-lg bg-zinc-950 border border-zinc-900 flex items-center justify-center text-zinc-400">
-            <Smartphone size={16} />
+          <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-zinc-950 border border-zinc-900 flex items-center justify-center text-zinc-400 shrink-0">
+            <Smartphone size={15} />
           </div>
         </div>
       </div>
 
-      {/* Grid Layout splits into Cards & Quick Communications Sidebar */}
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 items-start">
+      {/* Main Structural Layout Split */}
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-5 sm:gap-6 items-start px-4 sm:p-0">
         
-        {/* Main Floor Platforms Quick Audit Feed */}
+        {/* Main Floor Platforms Audit Feed Container */}
         <div className="xl:col-span-2 space-y-4">
-          <h2 className="text-xs font-bold uppercase tracking-wider text-zinc-500 flex items-center gap-1.5">
+          <h2 className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-zinc-500 flex items-center gap-1.5">
             <BarChart3 size={12} /> Operational Hubs Control Lineup
           </h2>
           
@@ -178,15 +177,15 @@ export default function FloorCheckHub() {
             return (
               <div 
                 key={platform.id} 
-                className={`bg-brand-darkGray border rounded-xl p-4 transition-all duration-150
+                className={`bg-brand-darkGray border rounded-xl p-4 transition-all duration-150 space-y-4
                   ${isCompleted ? 'border-brand-neonGreen/10 bg-brand-neonGreen/[0.01]' : 'border-zinc-800/80'}
                   ${isFailed ? 'border-brand-neonRed bg-brand-neonRed/[0.01]' : ''}
                 `}
               >
-                <div className="flex flex-wrap justify-between items-start gap-2">
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <h3 className="text-base font-bold text-white tracking-wide">{platform.name}</h3>
+                <div className="flex justify-between items-start gap-3">
+                  <div className="space-y-0.5">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <h3 className="text-sm sm:text-base font-bold text-white tracking-wide">{platform.name}</h3>
                       <span className={`text-[9px] px-1.5 py-0.5 rounded font-mono font-bold uppercase border
                         ${isCompleted ? 'bg-brand-neonGreen/10 border-brand-neonGreen/20 text-brand-neonGreen' : ''}
                         ${isFailed ? 'bg-brand-neonRed/10 border-brand-neonRed/20 text-brand-neonRed' : ''}
@@ -196,61 +195,62 @@ export default function FloorCheckHub() {
                         {platform.status}
                       </span>
                     </div>
-                    <p className="text-xs text-zinc-500 mt-0.5">Platform Lead: <span className="text-zinc-400 font-medium">{platform.incharge}</span></p>
+                    <p className="text-xs text-zinc-500">Platform Lead: <span className="text-zinc-400 font-medium">{platform.incharge}</span></p>
                   </div>
                   
-                  {/* Interactive Quick Comms Hook */}
+                  {/* Ping Platform Lead Trigger */}
                   <button 
                     onClick={() => setActiveChat({ id: platform.id, name: platform.name, incharge: platform.incharge })}
-                    className="flex items-center gap-1.5 px-2.5 py-1.5 bg-zinc-950 hover:bg-zinc-900 border border-zinc-800 rounded-lg text-xs font-medium text-zinc-300 hover:text-brand-neonCyan transition-all"
+                    className="flex items-center gap-1.5 px-2.5 py-2 sm:py-1.5 bg-zinc-950 hover:bg-zinc-900 border border-zinc-800 rounded-lg text-xs font-medium text-zinc-300 hover:text-brand-neonCyan transition-all shrink-0 cursor-pointer"
                   >
                     <MessageSquare size={13} />
-                    <span>Ping Lead</span>
+                    <span className="hidden sm:inline">Ping Lead</span>
                   </button>
                 </div>
 
-                {/* Grid Split containing Direct Tap Count Buttons */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
-                  {/* Laptop Action Tracker */}
-                  <div className="bg-zinc-950 p-3 rounded-lg border border-zinc-900 flex justify-between items-center">
-                    <div className="flex items-center gap-2.5">
-                      <div className="text-zinc-500"><Laptop size={15} /></div>
-                      <div>
-                        <p className="text-[10px] uppercase font-bold text-zinc-500 tracking-wider">Laptops</p>
+                {/* Incremental Touch Count Block - Stacks on Mobile screens */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  
+                  {/* Laptop Incremental Module */}
+                  <div className="bg-zinc-950 p-3 rounded-lg border border-zinc-900/60 flex justify-between items-center gap-2">
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="text-zinc-500 shrink-0"><Laptop size={15} /></div>
+                      <div className="min-w-0">
+                        <p className="text-[9px] uppercase font-bold text-zinc-500 tracking-wider truncate">Laptops</p>
                         <p className="text-xs font-bold text-white font-mono">{platform.assets.laptops.checked} / {platform.assets.laptops.total}</p>
                       </div>
                     </div>
                     <button 
                       disabled={platform.assets.laptops.checked === platform.assets.laptops.total}
                       onClick={() => handleIncrementAsset(platform.id, 'laptops')}
-                      className="px-2.5 py-1 bg-brand-neonGreen/10 border border-brand-neonGreen/20 text-brand-neonGreen hover:bg-brand-neonGreen hover:text-zinc-950 text-xs font-extrabold rounded transition-all disabled:opacity-20 disabled:pointer-events-none"
+                      className="px-3 py-1.5 bg-brand-neonGreen/10 border border-brand-neonGreen/20 text-brand-neonGreen hover:bg-brand-neonGreen hover:text-zinc-950 text-xs font-extrabold rounded active:scale-95 transition-all disabled:opacity-20 disabled:pointer-events-none cursor-pointer select-none shrink-0"
                     >
                       + Scan
                     </button>
                   </div>
 
-                  {/* Phone Action Tracker */}
-                  <div className="bg-zinc-950 p-3 rounded-lg border border-zinc-900 flex justify-between items-center">
-                    <div className="flex items-center gap-2.5">
-                      <div className="text-zinc-500"><Smartphone size={15} /></div>
-                      <div>
-                        <p className="text-[10px] uppercase font-bold text-zinc-500 tracking-wider">Smartphones</p>
+                  {/* Phone Incremental Module */}
+                  <div className="bg-zinc-950 p-3 rounded-lg border border-zinc-900/60 flex justify-between items-center gap-2">
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="text-zinc-500 shrink-0"><Smartphone size={15} /></div>
+                      <div className="min-w-0">
+                        <p className="text-[9px] uppercase font-bold text-zinc-500 tracking-wider truncate">Smartphones</p>
                         <p className="text-xs font-bold text-white font-mono">{platform.assets.phones.checked} / {platform.assets.phones.total}</p>
                       </div>
                     </div>
                     <button 
                       disabled={platform.assets.phones.checked === platform.assets.phones.total}
                       onClick={() => handleIncrementAsset(platform.id, 'phones')}
-                      className="px-2.5 py-1 bg-brand-neonCyan/10 border border-brand-neonCyan/20 text-brand-neonCyan hover:bg-brand-neonCyan hover:text-zinc-950 text-xs font-extrabold rounded transition-all disabled:opacity-20 disabled:pointer-events-none"
+                      className="px-3 py-1.5 bg-brand-neonCyan/10 border border-brand-neonCyan/20 text-brand-neonCyan hover:bg-brand-neonCyan hover:text-zinc-950 text-xs font-extrabold rounded active:scale-95 transition-all disabled:opacity-20 disabled:pointer-events-none cursor-pointer select-none shrink-0"
                     >
                       + Scan
                     </button>
                   </div>
                 </div>
 
-                {/* Quick Warning Notice Banner */}
+                {/* Discrepancy Warnings */}
                 {platform.discrepancy && (
-                  <div className="mt-3 p-2 bg-brand-neonRed/10 border border-brand-neonRed/20 text-brand-neonRed rounded-md text-xs font-medium flex items-center gap-2">
+                  <div className="p-2.5 bg-brand-neonRed/10 border border-brand-neonRed/20 text-brand-neonRed rounded-md text-xs font-medium flex items-center gap-2 break-words">
                     <ShieldAlert size={14} className="shrink-0" />
                     <span>Flagged Issue: {platform.discrepancy}</span>
                   </div>
@@ -260,41 +260,41 @@ export default function FloorCheckHub() {
           })}
         </div>
 
-        {/* Dynamic Comms Channel Panel Sidebar */}
+        {/* Radio Wire Intercom Sidebar Section */}
         <div className="space-y-4">
-          <h2 className="text-xs font-bold uppercase tracking-wider text-zinc-500">Radio Dispatch Wire</h2>
+          <h2 className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-zinc-500">Radio Dispatch Wire</h2>
           {activeChat ? (
-            <div className="bg-brand-darkGray border border-brand-neonCyan/20 rounded-xl p-4 flex flex-col h-64 justify-between shadow-lg">
-              <div>
-                <div className="flex justify-between items-start border-b border-zinc-800 pb-2">
-                  <div>
-                    <p className="text-xs font-bold text-white">{activeChat.name}</p>
-                    <p className="text-[10px] text-zinc-500">Lead: {activeChat.incharge}</p>
+            <div className="bg-brand-darkGray border border-brand-neonCyan/20 rounded-xl p-4 flex flex-col h-64 justify-between shadow-xl">
+              <div className="space-y-3">
+                <div className="flex justify-between items-start border-b border-zinc-900 pb-2 gap-2">
+                  <div className="min-w-0">
+                    <p className="text-xs font-bold text-white truncate">{activeChat.name}</p>
+                    <p className="text-[10px] text-zinc-500 truncate">Lead: {activeChat.incharge}</p>
                   </div>
-                  <button onClick={() => setActiveChat(null)} className="text-xs text-zinc-500 hover:text-white font-semibold">Close</button>
+                  <button onClick={() => setActiveChat(null)} className="text-xs text-zinc-500 hover:text-white font-semibold shrink-0 cursor-pointer">Close</button>
                 </div>
-                <div className="mt-3 text-xs text-zinc-500 text-center py-4 border border-dashed border-zinc-900 rounded-lg">
+                <div className="text-xs text-zinc-500 text-center py-4 border border-dashed border-zinc-900 rounded-lg bg-zinc-950/20 px-2">
                   Secure channel connected to platform lead console.
                 </div>
               </div>
-              <div className="flex gap-2">
+              <div className="flex gap-2 pt-2">
                 <input 
                   type="text" 
                   placeholder="Type instructions..." 
                   value={chatMessage}
                   onChange={(e) => setChatMessage(e.target.value)}
-                  className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-neonCyan/50"
+                  className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-brand-neonCyan/40 transition-colors"
                 />
                 <button 
                   onClick={() => { setChatMessage(""); alert("Message broadcasted to InCharge device terminal!"); }}
-                  className="p-2 bg-brand-neonCyan text-zinc-950 rounded-lg hover:scale-105 transition-transform"
+                  className="p-2.5 bg-brand-neonCyan text-zinc-950 rounded-lg active:scale-95 transition-all shrink-0 flex items-center justify-center cursor-pointer"
                 >
                   <Send size={14} />
                 </button>
               </div>
             </div>
           ) : (
-            <div className="bg-brand-darkGray/30 border border-zinc-900 rounded-xl p-6 text-center text-xs text-zinc-600 font-medium">
+            <div className="bg-brand-darkGray/30 border border-zinc-900 rounded-xl p-5 text-center text-xs text-zinc-600 font-medium">
               Select "Ping Lead" next to any active platform to establish a dedicated real-time link.
             </div>
           )}
